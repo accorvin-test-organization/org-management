@@ -16,4 +16,4 @@ jobs:
       - name: Apply organization membership
         run: |
           echo ${{ secrets.ORG_MANAGEMENT_TOKEN }} > /.github_token.txt
-          peribolos --github-token-path /.github_token.txt --config-path "config/organization_membership.yaml"  --fix-org --fix-org-members --github-hourly-tokens="0" --min-admins=1 --confirm
+          peribolos --github-token-path /.github_token.txt --config-path "config/organization_membership.yaml"  --fix-org --fix-org-members --github-hourly-tokens="0" --min-admins=2 --confirm

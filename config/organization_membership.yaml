@@ -2,5 +2,6 @@ orgs:
   accorvin-test-organization:
     admins:
       - accorvin
+      - jkoehler-redhat
     members:
       - accorvin
