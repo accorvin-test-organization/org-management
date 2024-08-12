@@ -1,0 +1,6 @@
+orgs:
+  accorvin-test-organization:
+    admins:
+      - accorvin
+    members:
+      - accorvin

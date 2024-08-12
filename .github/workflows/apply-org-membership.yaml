@@ -1,0 +1,19 @@
+name: Apply Organization Membership
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - 'main'
+    paths:
+      - "config/organization_membership.yaml"
+jobs:
+  peribolos:
+    runs-on: ubuntu-latest
+    container:
+      image: gcr.io/k8s-prow/peribolos
+    steps:
+      - uses: actions/checkout@v3
+      - name: Apply organization membership
+        run: |
+          echo ${{ secrets.ORG_MANAGEMENT_TOKEN }} > /.github_token.txt
+          peribolos --github-token-path /.github_token.txt --config-path "config/organization_membership.yaml"  --fix-org --fix-org-members --github-hourly-tokens="0" --confirm
