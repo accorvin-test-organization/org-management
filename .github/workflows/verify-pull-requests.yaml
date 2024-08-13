@@ -1,3 +1,4 @@
+---
 name: Verify Pull Requests
 on:
   - pull_request
@@ -14,3 +15,37 @@ jobs:
           yamllint_comment: true
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  check-order:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install python packages
+        run: pip install pyyaml
+      - name: Check user order
+        uses: jannekem/run-python-script-action@v1
+        with:
+          script: |
+            import yaml
+
+            def is_list_sorted(data):
+                return all(data[i] <= data[i + 1] for i in range(len(data) - 1))
+
+            with open('config/organization_membership.yaml') as f:
+                data = yaml.safe_load(f)
+            orgs = data['orgs'].keys()
+            for org in orgs:
+                org_owners = data['orgs'][org].get('admins', [])
+                org_members = data['orgs'][org].get('members', [])
+
+                if not is_list_sorted(org_owners):
+                    print((f'The list of owners for org {org} '
+                          'is not in alphabetical order!'))
+                    exit(1)
+                elif not is_list_sorted(org_members):
+                    print((f'The list of members for org {org} '
+                          'is not in alphabetical order!'))
+                    exit(1)
