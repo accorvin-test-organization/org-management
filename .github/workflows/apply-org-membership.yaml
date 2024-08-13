@@ -28,6 +28,12 @@ jobs:
             with open('config/organization_members.yaml') as f:
                 members_data = yaml.safe_load(f)
 
+            merged_data = members_data.copy()
+            orgs = members_data['orgs'].keys()
+            for org in orgs:
+                org_admins = admins_data['orgs'].get(org, {}).get('admins', [])
+                merged_data['orgs'][org]['admins'] = org_admins
+
             merged_data = admins_data | members_data
             with open('config/organization_membership.yaml', 'w') as f:
                 yaml.dump(merged_data, f)
