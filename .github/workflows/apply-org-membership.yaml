@@ -20,4 +20,6 @@ jobs:
           peribolos --github-token-path /.github_token.txt \
             --config-path "config/organization_membership.yaml"  \
             --fix-org --fix-org-members --github-hourly-tokens="0" \
+            --min-admins=2 \
+            --required-admins=${{ secrets.ORG_OWNERS }} \
             --confirm

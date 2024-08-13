@@ -51,15 +51,18 @@ jobs:
                     exit(1)
       - name: Check for individuals in both users and admins lists
         uses: jannekem/run-python-script-action@v1
+        env:
+          ORG_OWNERS: ${{ secrets.ORG_OWNERS }}
         with:
           script: |
+            import os
             import yaml
 
             with open('config/organization_membership.yaml') as f:
                 data = yaml.safe_load(f)
             orgs = data['orgs'].keys()
+            org_owners = os.environ['ORG_OWNERS'].split(',')
             for org in orgs:
-                org_owners = data['orgs'][org].get('admins', [])
                 org_members = data['orgs'][org].get('members', [])
 
                 if len(set(org_owners).intersection(org_members)) > 0:
@@ -86,4 +89,18 @@ jobs:
                 if len(set(org_members)) < len(org_members):
                     print(('There is a duplicate user in the list of '
                            f'members for org {org}'))
+                    exit(1)
+      - name: Ensure that admins is not set
+        uses: jannekem/run-python-script-action@v1
+        with:
+          script: |
+            import yaml
+
+            with open('config/organization_membership.yaml') as f:
+                data = yaml.safe_load(f)
+            orgs = data['orgs'].keys()
+            for org in orgs:
+                if 'admins' in data['orgs'][org].keys():
+                    print(('Changes to the org membershp that change the list '
+                           'of owners are not allowed.'))
                     exit(1)

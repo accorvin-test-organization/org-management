@@ -13,3 +13,35 @@ to automatically apply the membership after any change to the membership config.
 This automation depends on a GitHub ]personal access token with read and write
 permissions to organization members. The token value is saved in this repository as a
 repository secret with name `ORG_MANAGEMENT_TOKEN`.
+
+## Making Changes to Organization Membership
+
+Addition or removal of users to/from the organization should be made by editing
+the [membership config][config/organization_membership.yaml].
+
+To add an individual to the organization, open a pull request adding the
+individual's GitHub username to the membership config file. *Note* Please
+add individuals in alphabetical order.
+
+## CI/CD
+
+We use GitHub actions to automate the functionality of this repository. To validate
+new changes to this repository, we have a workflow called [Verify Pull Requests](.github/workflows/verify-pull-requests.yaml).
+For every pull request to this repository, this will:
+
+  * Lint all YAML files
+  * Check that the list of organization users is alphabetical
+  * Ensure that there are no duplicate individuals
+  * Ensure that changes to organization owners are not being made
+
+When changes to the membership config file are merged to main, an additional workflow
+called [Apply Organization Membership](.github/workflows/apply-org-membership.yaml) is run. This
+workflow runs the Peribolos tool and reconciles the state of the org membership to
+the contencts of the config file.
+
+## Managing Organization Owners
+
+We want to prevent changes to the org management file that result in the state of organization owners
+changing. The Peribolos tool currently requires that you specify owners when running it, so we've
+hard coded the set of organization owners. This set is managed as an organization-level variable
+called `ORG_OWNERS` that is then consumed by the Peribolos tool at runtime.
