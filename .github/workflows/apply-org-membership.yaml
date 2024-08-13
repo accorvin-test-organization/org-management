@@ -13,7 +13,7 @@ jobs:
     container:
       image: gcr.io/k8s-prow/peribolos
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@master
       - name: Apply organization membership
         run: |
           echo ${{ secrets.ORG_MANAGEMENT_TOKEN }} > /.github_token.txt
