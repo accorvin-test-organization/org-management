@@ -1,3 +1,4 @@
+---
 name: Apply Organization Membership
 on:
   workflow_dispatch: {}
