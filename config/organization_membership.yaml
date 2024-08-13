@@ -1,5 +1,5 @@
 ---
 orgs:
   accorvin-test-organization:
-    admins:
+    members:
       - anishasthana
