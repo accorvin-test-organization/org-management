@@ -2,5 +2,4 @@
 orgs:
   accorvin-test-organization:
     admins:
-      - accorvin
-      - jkoehler-redhat
+      - anishasthana
