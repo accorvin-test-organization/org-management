@@ -34,7 +34,7 @@ jobs:
             def is_list_sorted(data):
                 return all(data[i] <= data[i + 1] for i in range(len(data) - 1))
 
-            with open('config/organization_membership.yaml') as f:
+            with open('config/organization_members.yaml') as f:
                 data = yaml.safe_load(f)
             orgs = data['orgs'].keys()
             for org in orgs:
@@ -58,12 +58,14 @@ jobs:
             import os
             import yaml
 
-            with open('config/organization_membership.yaml') as f:
-                data = yaml.safe_load(f)
-            orgs = data['orgs'].keys()
-            org_owners = os.environ['ORG_OWNERS'].split(',')
+            with open('config/organization_members.yaml') as f:
+                members_data = yaml.safe_load(f)
+            with open('config/organization_admins.yaml') as f:
+                owners_data = yaml.safe_load(f)
+            orgs = members_data['orgs'].keys()
             for org in orgs:
-                org_members = data['orgs'][org].get('members', [])
+                org_owners = owners_data['orgs'][org].get('admins', [])
+                org_members = members_data['orgs'][org].get('members', [])
 
                 if len(set(org_owners).intersection(org_members)) > 0:
                     print(('There is a user listed in members that is '
@@ -75,7 +77,7 @@ jobs:
           script: |
             import yaml
 
-            with open('config/organization_membership.yaml') as f:
+            with open('config/organization_members.yaml') as f:
                 data = yaml.safe_load(f)
             orgs = data['orgs'].keys()
             for org in orgs:
@@ -96,7 +98,7 @@ jobs:
           script: |
             import yaml
 
-            with open('config/organization_membership.yaml') as f:
+            with open('config/organization_members.yaml') as f:
                 data = yaml.safe_load(f)
             orgs = data['orgs'].keys()
             for org in orgs:
