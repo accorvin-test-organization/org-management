@@ -6,7 +6,7 @@ membership via GitHub Actions automation.
 ## Automation Setup
 
 We use [Peribolos](https://docs.prow.k8s.io/docs/components/cli-tools/peribolos/) to manage
-organization membership. The membership is defined in [config/organization_membership.yaml](config/organization_membership.yaml).
+organization membership. The membership is defined in [config/organization_members.yaml][membership_config]].
 We then use a GitHub action, defined in [.github/workflows/apply-org-membership.yaml](.github/workflows/apply-org-membership.yaml)
 to automatically apply the membership after any change to the membership config.
 
@@ -17,7 +17,7 @@ repository secret with name `ORG_MANAGEMENT_TOKEN`.
 ## Making Changes to Organization Membership
 
 Addition or removal of users to/from the organization should be made by editing
-the [membership config][config/organization_membership.yaml].
+the [membership config][membership_config].
 
 To add an individual to the organization, open a pull request adding the
 individual's GitHub username to the membership config file. *Note* Please
@@ -45,3 +45,5 @@ We want to prevent changes to the org management file that result in the state o
 changing. The Peribolos tool currently requires that you specify owners when running it, so we've
 hard coded the set of organization owners. This set is managed as an organization-level variable
 called `ORG_OWNERS` that is then consumed by the Peribolos tool at runtime.
+
+[membership_config]: config/organization_members.yaml
