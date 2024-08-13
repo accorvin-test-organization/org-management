@@ -8,10 +8,8 @@ on:
     paths:
       - "config/organization_membership.yaml"
 jobs:
-  peribolos:
+  merge_membership_config:
     runs-on: ubuntu-latest
-    container:
-      image: gcr.io/k8s-prow/peribolos
     steps:
       - uses: actions/checkout@master
       - uses: actions/setup-python@v5
@@ -33,6 +31,23 @@ jobs:
             merged_data = admins_data | members_data
             with open('config/organization_membrership.yaml', 'w') as f:
                 yaml.dump(merged_data, f)
+      - name: Save the merged membership file
+        uses: actions/upload-artifact@master
+        with:
+          name: membership-config
+          path: config/
+  peribolos:
+    runs-on: ubuntu-latest
+    needs: merge_membership_config
+    container:
+      image: gcr.io/k8s-prow/peribolos
+    steps:
+      - uses: actions/checkout@master
+      - name: Fetch the merged membership file
+        uses: actions/download-artifact@master
+        with:
+          name: membership-config
+          path: config/
       - name: Apply organization membership
         run: |
           echo ${{ secrets.ORG_MANAGEMENT_TOKEN }} > /.github_token.txt
